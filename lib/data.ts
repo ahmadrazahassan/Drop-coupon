@@ -60,7 +60,7 @@ function store(
     name,
     logo: `/stores/${slug}.png`,
     description,
-    url: `https://${domain}`,
+    url: domain.startsWith("http") ? domain : `https://${domain}`,
     categorySlug,
   };
 }
@@ -69,7 +69,7 @@ const stores: Store[] = [
   // ---- AI App & Web Builders ----
   store("v0", "v0", "v0.app", "ai-builders", "Generate UI and full-stack apps from prompts, by Vercel."),
   store("lovable", "Lovable", "lovable.dev", "ai-builders", "Build and ship full-stack web apps by chatting with AI."),
-  store("base44", "Base44", "base44.com", "ai-builders", "Create custom business apps with AI — no code required."),
+  store("base44", "Base44", "https://base44.pxf.io/c/6817150/2049275/25619?trafcat=base", "ai-builders", "Create custom business apps with AI — no code required."),
   store("bolt-new", "Bolt.new", "bolt.new", "ai-builders", "Prompt, run, edit, and deploy full-stack apps in the browser, by StackBlitz."),
   store("replit", "Replit", "replit.com", "ai-builders", "Cloud workspace with an AI Agent that builds and deploys apps."),
   store("create-xyz", "Create.xyz", "create.xyz", "ai-builders", "Turn plain text into sites, apps, and tools with AI."),
@@ -209,7 +209,7 @@ const coupons: Coupon[] = [
   deal("lovable-3", "lovable", "2 months free", "Two months free on annual Lovable", "Annual billing includes roughly two months free.", true),
 
   code("base44-1", "base44", "15% off", "15% off any Base44 paid plan", "Apply at checkout on monthly or annual plans.", "BASE15"),
-  deal("base44-2", "base44", "Save 20%", "Save ~20% with Base44 annual billing", "Yearly billing lowers the effective monthly price.", true),
+  deal("base44-2", "base44", "Save 20%", "Save 20% with Base44 annual billing", "Yearly billing lowers the effective monthly price.", true),
 
   code("bolt-1", "bolt-new", "25% off", "25% off Bolt.new Pro", "Discount on your first Pro billing cycle.", "BOLT25", false, "2026-08-15"),
   deal("bolt-2", "bolt-new", "2 months free", "Two months free on annual Bolt Pro", "Annual billing includes about two months free.", true),
