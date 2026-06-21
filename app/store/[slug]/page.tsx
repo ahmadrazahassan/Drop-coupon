@@ -20,9 +20,36 @@ export async function generateMetadata({
   const { slug } = await params;
   const store = getStore(slug);
   if (!store) return { title: "Store not found" };
+
+  const coupons = getCouponsByStore(slug);
+  const bestCoupon = coupons.find((c) => c.verified) || coupons[0];
+  const discountText = bestCoupon ? ` (${bestCoupon.discount} Off)` : "";
+  const currentMonthYear = new Date().toLocaleDateString("en-US", {
+    month: "long",
+    year: "numeric",
+  });
+
   return {
-    title: `${store.name} promo codes & coupons`,
-    description: store.description,
+    title: `${store.name} Promo Code, Coupons & Discount${discountText} — ${currentMonthYear}`,
+    description: `Save money at ${store.name} with verified promo codes, coupons, and discounts. Get up to ${bestCoupon ? bestCoupon.discount : "special savings"} off your subscription in ${currentMonthYear}.`,
+    keywords: [
+      `${store.name} promo code`,
+      `${store.name} coupon`,
+      `${store.name} discount`,
+      `${store.name} coupon code`,
+      `${store.name} 20%`,
+      `${store.name} 50% discount`,
+      `${store.name} discount coupon code`,
+      `${store.name} subscription discount`,
+      `verified ${store.name} code`,
+      `active ${store.name} coupons`,
+      `save on ${store.name}`,
+      `best ${store.name} coupon`,
+      `${store.name} deal`,
+    ],
+    alternates: {
+      canonical: `/store/${slug}`,
+    },
   };
 }
 
@@ -40,8 +67,42 @@ export default async function StorePage({
   const deals = coupons.filter((c) => c.type === "promo");
   const category = getCategory(store.categorySlug);
 
+  const currentMonthYear = new Date().toLocaleDateString("en-US", {
+    month: "long",
+    year: "numeric",
+  });
+
+  const schema = {
+    "@context": "https://schema.org",
+    "@type": "ItemList",
+    "name": `${store.name} Promo Codes and Coupons (${currentMonthYear})`,
+    "description": `Active discount codes and deals for ${store.name}`,
+    "numberOfItems": coupons.length,
+    "itemListElement": coupons.map((c, index) => ({
+      "@type": "ListItem",
+      "position": index + 1,
+      "item": {
+        "@type": "Offer",
+        "name": c.title,
+        "description": c.description,
+        "priceCurrency": "USD",
+        "category": category ? category.name : "AI Software",
+        "seller": {
+          "@type": "Organization",
+          "name": store.name,
+          "url": store.url,
+        },
+      },
+    })),
+  };
+
   return (
     <div className="container-page py-10 md:py-14">
+      {/* JSON-LD Structured Data */}
+      <script
+        type="application/ld+json"
+        dangerouslySetInnerHTML={{ __html: JSON.stringify(schema) }}
+      />
       <Breadcrumb
         items={[
           { label: "Drop Coupon", href: "/" },

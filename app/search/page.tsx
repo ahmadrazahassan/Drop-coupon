@@ -5,8 +5,9 @@ import { CouponCard } from "@/components/coupon-card";
 import { searchAll } from "@/lib/data";
 
 export const metadata: Metadata = {
-  title: "Search",
+  title: "Search Promo Codes",
   description: "Search verified promo codes, coupons, and stores.",
+  robots: "noindex, nofollow",
 };
 
 export default async function SearchPage({

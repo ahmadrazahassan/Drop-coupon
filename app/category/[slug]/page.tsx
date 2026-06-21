@@ -27,9 +27,26 @@ export async function generateMetadata({
   const { slug } = await params;
   const category = getCategory(slug);
   if (!category) return { title: "Category not found" };
+
+  const currentMonthYear = new Date().toLocaleDateString("en-US", {
+    month: "long",
+    year: "numeric",
+  });
+
   return {
-    title: `${category.name} promo codes & deals`,
-    description: category.description,
+    title: `Best ${category.name} Promo Codes & Deals (${currentMonthYear})`,
+    description: `Find the best verified promo codes, coupons, and discount deals for ${category.name}. Updated for ${currentMonthYear}.`,
+    keywords: [
+      `${category.name} promo codes`,
+      `${category.name} coupons`,
+      `${category.name} discounts`,
+      `best ${category.name} deals`,
+      `ai software coupon codes`,
+      `verified ${category.name} promo`,
+    ],
+    alternates: {
+      canonical: `/category/${slug}`,
+    },
   };
 }
 

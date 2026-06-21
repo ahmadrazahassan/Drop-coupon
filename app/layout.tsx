@@ -14,12 +14,42 @@ const interTight = Inter_Tight({
 });
 
 export const metadata: Metadata = {
+  metadataBase: new URL("https://dropcoupon.com"),
   title: {
-    default: "Drop Coupon — Verified promo codes for AI tools",
+    default: "Drop Coupon: Best AI Tool Promo Codes, Coupons & Discounts",
     template: "%s · Drop Coupon",
   },
   description:
-    "Drop Coupon aggregates verified promo codes, discounts, and deals for the best AI tools — builders, coding assistants, chat, and search. Reveal and copy a working code in one click.",
+    "Find verified promo codes, coupons, and discount deals for the best AI tools — including coding assistants, chat builders, writing assistants, and search engines. Save up to 50% on subscriptions today.",
+  keywords: [
+    "AI promo codes",
+    "AI tool coupons",
+    "AI discounts",
+    "ChatGPT promo code",
+    "Claude discount",
+    "Cursor AI coupon code",
+    "cursor promo code",
+    "cursor 20%",
+    "cursor 50% discount coupon code",
+    "lovable 20% discount",
+    "lovable promo code",
+    "v0 app discount",
+    "v0 promo code",
+    "Lovable dev coupon",
+    "Base44 promo code",
+    "perplexity pro free",
+    "perplexity student discount",
+    "AI coding assistant deals",
+    "AI web builder coupons",
+    "best AI deals",
+    "AI subscription discounts",
+    "software discount codes",
+    "active promo codes",
+    "verified coupons",
+    "discount codes for AI tools",
+    "AI software offers",
+    "coupon directory",
+  ],
 };
 
 export default function RootLayout({

@@ -10,11 +10,27 @@ import {
   type CouponSort,
 } from "@/lib/data";
 
-export const metadata: Metadata = {
-  title: "Top Codes",
-  description:
-    "Browse the top verified promo codes and deals this month, filterable by category.",
-};
+export async function generateMetadata(): Promise<Metadata> {
+  const currentMonthYear = new Date().toLocaleDateString("en-US", {
+    month: "long",
+    year: "numeric",
+  });
+
+  return {
+    title: `Top AI Tool Promo Codes & Verified Coupons — ${currentMonthYear}`,
+    description: `Browse the top hand-checked, verified promo codes and discount deals for the most popular AI tools this month (${currentMonthYear}).`,
+    keywords: [
+      "top ai promo codes",
+      "best verified coupons",
+      "active promo codes this month",
+      "ai tool deals",
+      "popular ai software discounts",
+    ],
+    alternates: {
+      canonical: "/top",
+    },
+  };
+}
 
 const SORTS: SortOption[] = ["top", "newest", "expiring"];
 
