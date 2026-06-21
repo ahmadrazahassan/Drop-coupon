@@ -59,6 +59,9 @@ export default function RootLayout({
 }>) {
   return (
     <html lang="en" className={`${interTight.variable} h-full antialiased`}>
+      <head>
+        <meta name="impact-site-verification" {...{ value: "d5e546d9-a853-4c65-b9e6-8f3e72fa80d7" }} />
+      </head>
       <body className="flex min-h-full flex-col bg-background text-ink">
         <Header />
         <main className="flex-1">{children}</main>
