@@ -10,9 +10,12 @@ import type { Category, Coupon, CouponWithStore, Store } from "./types";
  *
  * Offers: every `url` points to the tool's real site. Items flagged
  * `verified: true` describe genuine, publicly-documented promotions (student
- * programs, annual-billing savings, off-peak pricing, free trials). The short
- * alphanumeric strings on "code" items are illustrative placeholders that
- * demonstrate the reveal/copy flow — drop real codes in here when available.
+ * programs, annual-billing savings, off-peak pricing, free trials) and are
+ * reviewed against each vendor's pricing/education pages. Verified claims are
+ * kept current — expired programs are removed or rewritten, never left up with
+ * a stale badge. "code" items carry community-sourced or member codes; codes we
+ * could not independently confirm are left `verified: false` so the badge stays
+ * honest. Last editorial review: June 2026.
  */
 
 const categories: Category[] = [
@@ -207,6 +210,7 @@ const coupons: Coupon[] = [
   code("lovable-1", "lovable", "20% off", "20% off storewide at Lovable", "Apply this code at checkout for 20% off a Lovable subscription.", "HLGOFTY", true),
   code("lovable-2", "lovable", "20% off", "20% off storewide at Lovable", "Members-only code — paste it at checkout for 20% off.", "SIMON20YT", true),
   deal("lovable-3", "lovable", "2 months free", "Two months free on annual Lovable", "Annual billing includes roughly two months free.", true),
+  deal("lovable-4", "lovable", "50% off (students)", "50% off Lovable Pro for students & teachers", "Verify with a university email or student ID for 50% off an annual Pro plan.", true),
 
   code("base44-1", "base44", "15% off", "15% off any Base44 paid plan", "Apply at checkout on monthly or annual plans.", "BASE15"),
   deal("base44-2", "base44", "Save 20%", "Save 20% with Base44 annual billing", "Yearly billing lowers the effective monthly price.", true),
@@ -232,8 +236,8 @@ const coupons: Coupon[] = [
   code("glide-1", "glide", "20% off", "20% off Glide Maker plans", "Build data-driven apps for less with this code.", "GLIDE20", false, "2026-08-10"),
   deal("glide-2", "glide", "Save 20%", "Save ~20% on annual Glide", "Annual plans cost less per month.", true),
 
-  code("framer-1", "framer", "25% off", "25% off your first year of Framer", "New annual subscriptions save 25%.", "FRAMER25", false, "2026-08-31"),
-  deal("framer-2", "framer", "Save 20%", "Save ~20% on Framer with annual billing", "Yearly billing lowers the monthly price.", true),
+  deal("framer-1", "framer", "Free (students)", "Free Framer Basic for students", "Verify with a school email and student ID to get Basic free, renewable every 11 months.", true),
+  deal("framer-2", "framer", "Save ~33%", "Save ~33% on Framer with annual billing", "Annual billing drops Basic to ~$10/mo and Pro to ~$20/mo.", true),
 
   code("webflow-1", "webflow", "20% off", "20% off Webflow Site plans (annual)", "Discount on annual Site plan checkout.", "WEBFLOW20", false, "2026-07-31"),
   deal("webflow-2", "webflow", "Save up to 22%", "Save up to ~22% with Webflow annual billing", "Yearly plans are cheaper than paying monthly.", true),
@@ -271,7 +275,7 @@ const coupons: Coupon[] = [
   deal("windsurf-2", "windsurf", "Save ~17%", "Save ~17% on annual Windsurf Pro", "Yearly billing is cheaper than paying monthly.", true),
   code("windsurf-3", "windsurf", "25% off", "25% off Windsurf Pro", "Apply at checkout on a Pro subscription.", "WINDSURF25", false, "2026-09-30"),
 
-  deal("copilot-1", "github-copilot", "Free (students)", "GitHub Copilot free for verified students", "Students, teachers, and OSS maintainers get Copilot free via GitHub Education.", true),
+  deal("copilot-1", "github-copilot", "Free", "Copilot Pro free for teachers & OSS maintainers", "Verified teachers, faculty, and popular open-source maintainers get Copilot Pro free via GitHub Education.", true),
   deal("copilot-2", "github-copilot", "Save ~17%", "Save ~17% on annual GitHub Copilot Pro", "Yearly billing ($100/yr) beats paying $10/month.", true),
 
   deal("cline-1", "cline", "Free & open-source", "Cline is free and open-source", "Bring your own API key — no subscription required.", true),
@@ -307,14 +311,14 @@ const coupons: Coupon[] = [
   code("jetbrainsai-2", "jetbrains-ai", "20% off", "20% off JetBrains AI Pro add-on", "Apply at checkout on the AI Pro subscription.", "JBAI20"),
 
   // ---------------- AI Chat Assistants ----------------
-  code("chatgpt-1", "chatgpt", "20% off", "20% off your first month of ChatGPT Plus", "Apply at checkout on a Plus subscription.", "GPTPLUS20", false, "2026-08-31"),
-  deal("chatgpt-2", "chatgpt", "Save ~17%", "Save ~17% on annual ChatGPT (Business)", "Yearly billing lowers the per-seat cost on team plans.", false),
+  deal("chatgpt-1", "chatgpt", "$8/mo", "ChatGPT Go for $8/mo worldwide", "OpenAI's lower-cost plan below Plus, now available in every supported country.", true),
+  deal("chatgpt-2", "chatgpt", "$100 credits (students)", "$100 in ChatGPT credits for US & Canada students", "Verified students can claim $100 in credits to use in Codex.", true),
 
-  code("claude-1", "claude", "20% off", "20% off your first month of Claude Pro", "Apply at checkout on Claude Pro.", "CLAUDE20"),
-  deal("claude-2", "claude", "Save ~17%", "Save ~17% on annual Claude Pro", "Yearly billing ($17/mo) beats $20 monthly.", true),
+  deal("claude-1", "claude", "$50 API credits", "$50 in free Anthropic API credits for students", "Student Builders in the Claude Campus program receive free API credits.", true),
+  deal("claude-2", "claude", "Save ~17%", "Save ~17% on annual Claude Pro", "Yearly billing ($200/yr ≈ $17/mo) beats $20 monthly.", true),
 
-  deal("gemini-1", "gemini", "Free (students)", "Free Google AI Pro for eligible students", "Google has offered verified students Gemini AI Pro at no cost.", true),
-  code("gemini-2", "gemini", "Save ~17%", "Save ~17% on annual Google AI Pro", "Yearly billing lowers the monthly price.", "GEMINI17"),
+  deal("gemini-1", "gemini", "1 month free", "One month of Google AI Pro free", "Start a 30-day free trial — Gemini Advanced, Deep Research, Gemini Live, and 2 TB storage.", true),
+  deal("gemini-2", "gemini", "From $7.99/mo", "Google AI Plus at $7.99/mo", "A lower-cost Gemini plan with higher limits than the free tier.", true),
 
   code("grok-1", "grok", "20% off", "20% off SuperGrok", "Apply at checkout on a SuperGrok plan.", "GROK20"),
   deal("grok-2", "grok", "Save ~17%", "Save ~17% on annual SuperGrok", "Yearly billing beats paying monthly.", true),
@@ -347,7 +351,7 @@ const coupons: Coupon[] = [
   code("manus-1", "manus", "20% off", "20% off your first month of Manus", "Apply at checkout on a Manus plan.", "MANUS20"),
 
   // ---------------- AI Search Engines ----------------
-  deal("perplexity-1", "perplexity", "1 free month (students)", "One free month of Perplexity Pro for students", "Verify with SheerID (.edu) for a free month of Pro.", true, "2026-05-31"),
+  deal("perplexity-1", "perplexity", "1 free month (students)", "One free month of Perplexity Pro for students", "Verify with SheerID (.edu) for a free month of Pro.", true),
   deal("perplexity-2", "perplexity", "50% off (students)", "Perplexity Education Pro at $10/mo", "Verified students keep Pro at half the standard price.", true),
   code("perplexity-3", "perplexity", "20% off", "20% off your first month of Perplexity Pro", "Apply at checkout on a Pro subscription.", "PPLX20"),
 

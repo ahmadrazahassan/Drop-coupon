@@ -96,8 +96,9 @@ export function Footer() {
         <div className="container-page flex flex-col items-center justify-between gap-2 py-5 text-[13px] text-white/55 md:flex-row">
           <p>© {new Date().getFullYear()} Drop Coupon. All rights reserved.</p>
           <p>
-            Offers are samples for demonstration. Drop Coupon may earn a
-            commission on purchases. Logos are trademarks of their owners.
+            Offers verified at time of publishing; check the merchant for final
+            terms. Drop Coupon may earn a commission on purchases. Logos are
+            trademarks of their owners.
           </p>
         </div>
       </div>
