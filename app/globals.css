@@ -133,6 +133,38 @@ h3 {
   }
 }
 
+/* Reveal modal — refined entrance (transforms/opacity only, no colour fades). */
+@keyframes modal-pop {
+  from {
+    opacity: 0;
+    transform: translateY(10px) scale(0.975);
+  }
+  to {
+    opacity: 1;
+    transform: none;
+  }
+}
+@keyframes backdrop-fade {
+  from {
+    opacity: 0;
+  }
+  to {
+    opacity: 1;
+  }
+}
+.modal-pop {
+  animation: modal-pop 0.24s cubic-bezier(0.16, 1, 0.3, 1);
+}
+.backdrop-fade {
+  animation: backdrop-fade 0.2s ease-out;
+}
+@media (prefers-reduced-motion: reduce) {
+  .modal-pop,
+  .backdrop-fade {
+    animation: none;
+  }
+}
+
 /* Long-form content styling for About / Legal / etc. pages. */
 .prose {
   color: var(--muted);

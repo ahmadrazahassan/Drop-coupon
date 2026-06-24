@@ -133,104 +133,107 @@ export function RevealModal({ coupon, open, onClose }: RevealModalProps) {
       <button
         type="button"
         aria-label="Close dialog"
-        className="absolute inset-0 cursor-default bg-ink/60"
+        className="backdrop-fade absolute inset-0 cursor-default bg-ink/55 backdrop-blur-[3px]"
         onClick={onClose}
       />
       <div
         ref={panelRef}
-        className="relative w-full max-w-[400px] overflow-hidden rounded-[var(--radius-lg)] border border-line bg-surface shadow-[0_24px_60px_-20px_rgba(35,35,35,0.35)]"
+        className="modal-pop relative w-full max-w-[400px] rounded-[var(--radius-lg)] border border-line bg-surface shadow-[0_30px_70px_-24px_rgba(35,35,35,0.45)]"
       >
         <button
           type="button"
           onClick={onClose}
           aria-label="Close"
-          className="absolute right-3 top-3 inline-flex h-8 w-8 items-center justify-center rounded-[var(--radius)] text-muted transition-colors hover:bg-background hover:text-ink"
+          className="absolute right-3 top-3 inline-flex h-8 w-8 items-center justify-center rounded-full text-muted transition-colors hover:bg-background hover:text-ink"
         >
-          <CloseIcon className="h-5 w-5" />
+          <CloseIcon className="h-[18px] w-[18px]" />
         </button>
 
-        {/* Header — brand + meta */}
-        <div className="flex items-center gap-3 border-b border-line px-6 pb-5 pt-6">
-          <StoreLogo store={coupon.store} size="sm" />
-          <div className="min-w-0">
-            <p className="truncate text-[15px] font-semibold text-ink">
-              {coupon.store.name}
-            </p>
-            <p className="text-[12.5px] uppercase tracking-[0.04em] text-muted">
-              {isCode ? "Promo code" : "Exclusive deal"}
-            </p>
-          </div>
-        </div>
-
-        {/* Body */}
-        <div className="px-6 py-6">
-          <div className="flex items-center gap-2">
-            <span className="text-[28px] font-extrabold tracking-[-0.02em] text-ink">
-              {coupon.discount}
-            </span>
-            {coupon.verified ? <Tag variant="verified">Verified</Tag> : null}
-          </div>
-          <p className="mt-1.5 text-[14px] leading-relaxed text-muted">
+        {/* Upper zone — brand + offer */}
+        <div className="flex flex-col items-center px-7 pb-7 pt-9 text-center">
+          <StoreLogo store={coupon.store} size="md" />
+          <p className="mt-4 text-[12px] font-medium uppercase tracking-[0.12em] text-muted">
+            {coupon.store.name} · {isCode ? "Promo code" : "Exclusive deal"}
+          </p>
+          <h2
+            id={titleId}
+            className="mt-2 text-[34px] font-extrabold leading-none tracking-[-0.03em] text-ink"
+          >
+            {coupon.discount}
+          </h2>
+          <p className="mt-2.5 max-w-[18rem] text-[14px] leading-relaxed text-muted">
             {coupon.title}
           </p>
+          {coupon.verified ? (
+            <span className="mt-3.5">
+              <Tag variant="verified">Verified</Tag>
+            </span>
+          ) : null}
+        </div>
 
+        {/* Perforated voucher divider */}
+        <div className="relative h-5">
+          <span className="absolute -left-[11px] top-1/2 h-[22px] w-[22px] -translate-y-1/2 rounded-full border border-line bg-background" />
+          <span className="absolute -right-[11px] top-1/2 h-[22px] w-[22px] -translate-y-1/2 rounded-full border border-line bg-background" />
+          <span className="absolute left-5 right-5 top-1/2 -translate-y-1/2 border-t border-dashed border-line" />
+        </div>
+
+        {/* Lower zone — action */}
+        <div className="px-7 pb-7 pt-5">
           {isCode ? (
-            <div className="mt-6">
-              <p className="text-[12.5px] font-medium uppercase tracking-[0.04em] text-muted">
-                Your code
-              </p>
-              <div className="mt-2 flex items-stretch overflow-hidden rounded-[var(--radius)] border border-dashed border-ink">
-                <span className="flex flex-1 select-all items-center px-4 py-3 text-[18px] font-bold tracking-[0.12em] text-ink">
+            <>
+              <div className="flex items-stretch overflow-hidden rounded-[var(--radius)] border border-ink/15 bg-background">
+                <span className="flex flex-1 select-all items-center justify-center py-3.5 text-[19px] font-bold tracking-[0.14em] text-ink">
                   {coupon.code}
                 </span>
                 <button
                   type="button"
                   onClick={copy}
-                  className="shrink-0 border-l border-dashed border-ink bg-background px-5 text-[13px] font-semibold text-ink transition-colors hover:bg-primary hover:text-ink"
+                  className="shrink-0 border-l border-ink/15 px-5 text-[13px] font-semibold text-ink transition-colors hover:bg-primary"
                 >
                   {copied ? "Copied" : "Copy"}
                 </button>
               </div>
-              <p className="mt-3 text-[13px] leading-relaxed text-muted">
-                Paste this code into the promo field at {coupon.store.name}{" "}
-                checkout and confirm the discount before paying.
+              <Button
+                className="mt-3"
+                variant="primary"
+                size="lg"
+                fullWidth
+                href={coupon.url}
+                external
+              >
+                Continue to {coupon.store.name}
+              </Button>
+              <p className="mt-3.5 text-center text-[12.5px] leading-relaxed text-muted">
+                Paste this code in the promo field at {coupon.store.name}{" "}
+                checkout.
               </p>
-              <div className="mt-5">
-                <Button
-                  variant="primary"
-                  size="lg"
-                  fullWidth
-                  href={coupon.url}
-                  external
-                >
-                  Continue to {coupon.store.name}
-                </Button>
-              </div>
-            </div>
+            </>
           ) : (
-            <div className="mt-6">
-              <p className="text-[13px] leading-relaxed text-muted">
+            <>
+              <p className="text-center text-[13.5px] leading-relaxed text-muted">
                 {coupon.description}
               </p>
-              <div className="mt-5">
-                <Button
-                  variant="primary"
-                  size="lg"
-                  fullWidth
-                  href={coupon.url}
-                  external
-                >
-                  Continue to {coupon.store.name}
-                </Button>
-              </div>
-            </div>
+              <Button
+                className="mt-4"
+                variant="primary"
+                size="lg"
+                fullWidth
+                href={coupon.url}
+                external
+              >
+                Continue to {coupon.store.name}
+              </Button>
+            </>
           )}
-        </div>
 
-        {/* Footer — trust + expiry */}
-        <div className="flex items-center justify-between gap-3 border-t border-line bg-background px-6 py-3.5 text-[12.5px] text-muted">
-          <span>{expiry}</span>
-          <span>Checked by Drop Coupon</span>
+          <div className="mt-5 flex items-center justify-center gap-2 text-[12px] text-muted">
+            <span>{expiry}</span>
+            <span aria-hidden="true" className="text-line">
+              |
+            </span>
+            <span>Checked by Drop Coupon</span>
+          </div>
         </div>
       </div>
     </div>,
