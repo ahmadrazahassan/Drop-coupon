@@ -14,6 +14,17 @@ export interface RevealModalProps {
   onClose: () => void;
 }
 
+function formatExpiry(expires: string): string {
+  if (expires === "ongoing") return "No expiry date";
+  const date = new Date(expires);
+  if (Number.isNaN(date.getTime())) return `Expires ${expires}`;
+  return `Expires ${date.toLocaleDateString("en-US", {
+    day: "numeric",
+    month: "short",
+    year: "numeric",
+  })}`;
+}
+
 const FOCUSABLE =
   'a[href], button:not([disabled]), input, [tabindex]:not([tabindex="-1"])';
 
@@ -110,6 +121,7 @@ export function RevealModal({ coupon, open, onClose }: RevealModalProps) {
 
   const isCode = coupon.type === "code" && Boolean(coupon.code);
   const titleId = `reveal-title-${coupon.id}`;
+  const expiry = formatExpiry(coupon.expires);
 
   return createPortal(
     <div
@@ -121,73 +133,105 @@ export function RevealModal({ coupon, open, onClose }: RevealModalProps) {
       <button
         type="button"
         aria-label="Close dialog"
-        className="absolute inset-0 cursor-default bg-ink/55"
+        className="absolute inset-0 cursor-default bg-ink/60"
         onClick={onClose}
       />
       <div
         ref={panelRef}
-        className="relative w-full max-w-md rounded-[var(--radius-lg)] border border-line bg-surface p-6 shadow-xl md:p-8"
+        className="relative w-full max-w-[400px] overflow-hidden rounded-[var(--radius-lg)] border border-line bg-surface shadow-[0_24px_60px_-20px_rgba(35,35,35,0.35)]"
       >
         <button
           type="button"
           onClick={onClose}
           aria-label="Close"
-          className="absolute right-3 top-3 inline-flex h-8 w-8 items-center justify-center rounded-[var(--radius)] text-muted hover:text-ink"
+          className="absolute right-3 top-3 inline-flex h-8 w-8 items-center justify-center rounded-[var(--radius)] text-muted transition-colors hover:bg-background hover:text-ink"
         >
           <CloseIcon className="h-5 w-5" />
         </button>
 
-        <div className="flex flex-col items-center text-center">
-          <StoreLogo store={coupon.store} size="md" />
-          <p className="mt-4 text-[13px] font-medium uppercase tracking-[0.04em] text-muted">
-            {coupon.store.name}
-          </p>
-          <h2 id={titleId} className="mt-1 text-[22px] font-bold text-ink">
-            {coupon.discount}
-          </h2>
-          <p className="mt-2 text-[14px] text-muted">{coupon.title}</p>
-          {coupon.verified ? (
-            <span className="mt-3">
-              <Tag variant="verified">Verified</Tag>
-            </span>
-          ) : null}
+        {/* Header — brand + meta */}
+        <div className="flex items-center gap-3 border-b border-line px-6 pb-5 pt-6">
+          <StoreLogo store={coupon.store} size="sm" />
+          <div className="min-w-0">
+            <p className="truncate text-[15px] font-semibold text-ink">
+              {coupon.store.name}
+            </p>
+            <p className="text-[12.5px] uppercase tracking-[0.04em] text-muted">
+              {isCode ? "Promo code" : "Exclusive deal"}
+            </p>
+          </div>
         </div>
 
-        {isCode ? (
-          <div className="mt-6">
-            <div className="flex items-center justify-center rounded-[var(--radius)] border border-dashed border-ink bg-background px-4 py-3">
-              <span className="select-all text-[18px] font-bold tracking-[0.08em] text-ink">
-                {coupon.code}
-              </span>
-            </div>
-            <div className="mt-4 grid gap-3">
-              <Button variant="primary" size="lg" fullWidth onClick={copy}>
-                {copied ? "Copied" : "Copy code"}
-              </Button>
-              <Button
-                variant="outline"
-                size="lg"
-                fullWidth
-                href={coupon.url}
-                external
-              >
-                Continue to {coupon.store.name}
-              </Button>
-            </div>
+        {/* Body */}
+        <div className="px-6 py-6">
+          <div className="flex items-center gap-2">
+            <span className="text-[28px] font-extrabold tracking-[-0.02em] text-ink">
+              {coupon.discount}
+            </span>
+            {coupon.verified ? <Tag variant="verified">Verified</Tag> : null}
           </div>
-        ) : (
-          <div className="mt-6">
-            <Button
-              variant="primary"
-              size="lg"
-              fullWidth
-              href={coupon.url}
-              external
-            >
-              Continue to {coupon.store.name}
-            </Button>
-          </div>
-        )}
+          <p className="mt-1.5 text-[14px] leading-relaxed text-muted">
+            {coupon.title}
+          </p>
+
+          {isCode ? (
+            <div className="mt-6">
+              <p className="text-[12.5px] font-medium uppercase tracking-[0.04em] text-muted">
+                Your code
+              </p>
+              <div className="mt-2 flex items-stretch overflow-hidden rounded-[var(--radius)] border border-dashed border-ink">
+                <span className="flex flex-1 select-all items-center px-4 py-3 text-[18px] font-bold tracking-[0.12em] text-ink">
+                  {coupon.code}
+                </span>
+                <button
+                  type="button"
+                  onClick={copy}
+                  className="shrink-0 border-l border-dashed border-ink bg-background px-5 text-[13px] font-semibold text-ink transition-colors hover:bg-primary hover:text-ink"
+                >
+                  {copied ? "Copied" : "Copy"}
+                </button>
+              </div>
+              <p className="mt-3 text-[13px] leading-relaxed text-muted">
+                Paste this code into the promo field at {coupon.store.name}{" "}
+                checkout and confirm the discount before paying.
+              </p>
+              <div className="mt-5">
+                <Button
+                  variant="primary"
+                  size="lg"
+                  fullWidth
+                  href={coupon.url}
+                  external
+                >
+                  Continue to {coupon.store.name}
+                </Button>
+              </div>
+            </div>
+          ) : (
+            <div className="mt-6">
+              <p className="text-[13px] leading-relaxed text-muted">
+                {coupon.description}
+              </p>
+              <div className="mt-5">
+                <Button
+                  variant="primary"
+                  size="lg"
+                  fullWidth
+                  href={coupon.url}
+                  external
+                >
+                  Continue to {coupon.store.name}
+                </Button>
+              </div>
+            </div>
+          )}
+        </div>
+
+        {/* Footer — trust + expiry */}
+        <div className="flex items-center justify-between gap-3 border-t border-line bg-background px-6 py-3.5 text-[12.5px] text-muted">
+          <span>{expiry}</span>
+          <span>Checked by Drop Coupon</span>
+        </div>
       </div>
     </div>,
     document.body,

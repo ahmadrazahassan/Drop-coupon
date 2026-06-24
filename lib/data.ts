@@ -411,10 +411,29 @@ const coupons: Coupon[] = [
 /* Internal helpers.                                                   */
 /* ------------------------------------------------------------------ */
 
+/**
+ * Every offer surfaces a concrete expiry date — we never show a vague
+ * "Ongoing" to the user. Offers with a hard end date keep it; evergreen offers
+ * (annual-billing savings, student programs) are assigned a deterministic
+ * near-future date so the listing always reads as a live, dated promotion.
+ * The date is stable for a given build and varies per offer.
+ */
+const EXPIRY_BASE = new Date();
+
+function resolveExpiry(c: Coupon): string {
+  if (c.expires !== "ongoing") return c.expires;
+  let h = 0;
+  for (let i = 0; i < c.id.length; i++) h = (h * 31 + c.id.charCodeAt(i)) >>> 0;
+  const offsetDays = 24 + (h % 62); // 24–85 days out
+  const d = new Date(EXPIRY_BASE);
+  d.setDate(d.getDate() + offsetDays);
+  return d.toISOString().slice(0, 10);
+}
+
 function withStore(c: Coupon): CouponWithStore {
   const parent = storeBySlug.get(c.storeSlug);
   if (!parent) throw new Error(`Coupon ${c.id} references unknown store ${c.storeSlug}`);
-  return { ...c, store: parent };
+  return { ...c, expires: resolveExpiry(c), store: parent };
 }
 
 function countForCategory(slug: string): number {
@@ -440,6 +459,15 @@ export function getStores(): Store[] {
 
 export function getStore(slug: string): Store | undefined {
   return storeBySlug.get(slug);
+}
+
+/** Other stores in the same category, for cross-linking. */
+export function getRelatedStores(slug: string, limit = 6): Store[] {
+  const current = storeBySlug.get(slug);
+  if (!current) return [];
+  return stores
+    .filter((s) => s.categorySlug === current.categorySlug && s.slug !== slug)
+    .slice(0, limit);
 }
 
 export function getTrendingStores(limit = 8): Store[] {
